@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 مینی‌اپ پیشرفته</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; }
+        body { text-align: center; direction: rtl; background: #111; color: white; padding: 20px; }
+
+        #header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: rgba(255,255,255,0.1); border-radius: 10px; backdrop-filter: blur(10px); }
+        #profile img { width: 50px; height: 50px; border-radius: 50%; box-shadow: 0 0 10px #fff; }
+        #score { font-size: 22px; font-weight: bold; text-shadow: 0 0 10px #fff; }
+        
+        #circle {
+            width: 150px; height: 150px; background: radial-gradient(circle, #ff0055, #ff6600);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 28px; font-weight: bold; cursor: pointer; margin: 50px auto;
+            box-shadow: 0px 0px 25px rgba(255, 0, 0, 0.9); animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        .nav { position: fixed; bottom: 10px; left: 0; right: 0; display: flex; justify-content: space-around;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 10px; border-radius: 15px; }
+        .nav button { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
+
+        .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8); padding: 20px; border-radius: 15px; display: none; backdrop-filter: blur(20px); }
+        .popup button { margin-top: 10px; background: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; }
+
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div id="profile">
+            <img id="userPhoto" src="" alt="User">
+            <h3 id="userName"></h3>
+        </div>
+        <div id="score">امتیاز: <span id="scoreValue">0</span></div>
+    </div>
+
+    <div id="circle">+1</div>
+
+    <div class="nav">
+        <button onclick="showPopup('leaderboard')">🏆 لیدربورد</button>
+        <button onclick="showPopup('tasks')">✅ وظایف</button>
+        <button onclick="showPopup('lottery')">🎲 قرعه‌کشی</button>
+        <button onclick="showPopup('settings')">⚙️ تنظیمات</button>
+    </div>
+
+    <div id="popup-leaderboard" class="popup">
+        <h2>🏆 لیدربورد</h2>
+        <p>۱. علی - ۲۰۰ امتیاز</p>
+        <p>۲. رضا - ۱۸۰ امتیاز</p>
+        <p>۳. محمد - ۱۵۰ امتیاز</p>
+        <button onclick="hidePopup('leaderboard')">بستن</button>
+    </div>
+
+    <div id="popup-tasks" class="popup">
+        <h2>✅ وظایف</h2>
+        <p>✔️ کلیک کن تا ۱۰ امتیاز بگیری!</p>
+        <p>✔️ یک دوست را دعوت کن و ۵۰ امتیاز بگیر!</p>
+        <button onclick="hidePopup('tasks')">بستن</button>
+    </div>
+
+    <div id="popup-lottery" class="popup">
+        <h2>🎲 قرعه‌کشی</h2>
+        <button onclick="lottery()">شرکت در قرعه‌کشی</button>
+        <button onclick="hidePopup('lottery')">بستن</button>
+    </div>
+
+    <div id="popup-settings" class="popup">
+        <h2>⚙️ تنظیمات</h2>
+        <button onclick="hidePopup('settings')">بستن</button>
+    </div>
+
+    <script>
+        let score = localStorage.getItem("score") ? parseInt(localStorage.getItem("score")) : 0;
+        document.getElementById("scoreValue").innerText = score;
+
+        document.getElementById("circle").addEventListener("click", function() {
+            score++;
+            document.getElementById("scoreValue").innerText = score;
+            localStorage.setItem("score", score);
+        });
+
+        function showPopup(id) {
+            document.getElementById(`popup-${id}`).style.display = "block";
+        }
+
+        function hidePopup(id) {
+            document.getElementById(`popup-${id}`).style.display = "none";
+        }
+
+        function lottery() {
+            let prize = Math.random() > 0.5 ? "🎁 جایزه ویژه!" : "😞 متأسفانه برنده نشدی!";
+            alert(prize);
+        }
+
+        if (window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+            let user = window.Telegram.WebApp.initDataUnsafe.user;
+            document.getElementById("userName").innerText = user.first_name;
+            document.getElementById("userPhoto").src = user.photo_url;
+        }
+    </script>
+</body>
+</html>
